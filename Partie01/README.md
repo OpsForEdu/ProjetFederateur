@@ -60,41 +60,40 @@ Suivez les instructions pour valider le certificat.
 mkdir frontend
 cd frontend
 sudo apt install git -y
-git clone <URL_DU_REPO_FRONTEND>
-```
-- Remplacez `<URL_DU_REPO_FRONTEND>` par l'URL de votre dépôt Git.
+git clone https://github.com/StartBootstrap/startbootstrap-agency.git
 
-Installez les dépendances et construisez votre app (exemple pour React) :
+# Copier les fichiers statiques dans le dossier web de Nginx
+sudo cp -r /home/ubuntu/frontend/startbootstrap-agency/dist/* /var/www/html/
+```
+
+Les fichiers statiques (HTML, CSS, JS) sont maintenant servis directement par Nginx depuis `/var/www/html/`.
+
+<!-- ## 6. Configuration de Nginx pour servir l'app statique
+
+Modifiez la configuration Nginx :
 
 ```bash
-cd <nom_du_repo>
-npm install
-npm run build
+sudo vi /etc/nginx/sites-available/default
 ```
 
-## 6. Configuration de Nginx pour servir l'app frontend
-
-Créez ou modifiez le fichier de configuration Nginx :
-
-```bash
-sudo nano /etc/nginx/sites-available/default
-```
-
-Exemple de configuration pour servir le dossier `build` :
+Remplacez le bloc `server` par :
 
 ```
 server {
     listen 80;
     server_name votre-domaine.com www.votre-domaine.com;
 
-    root /home/ubuntu/frontend/<nom_du_repo>/build;
+    root /home/ubuntu/frontend/startbootstrap-agency/dist;
     index index.html;
 
     location / {
-        try_files $uri /index.html;
+        try_files $uri $uri/ =404;
     }
-}
+} -->
 ```
+
+- Le chemin `root` doit pointer vers le dossier contenant le fichier `index.html` de votre app Bootstrap.
+- Pour obtenir le chemin absolu, utilisez la commande `pwd` dans le dossier voulu.
 
 Redémarrez Nginx :
 
@@ -107,15 +106,21 @@ sudo systemctl restart nginx
 1. Allez dans AWS Route53 > Hosted zones.
 2. Sélectionnez votre zone DNS.
 3. Ajoutez un enregistrement de type **A** :
-   - **Name** : (ex : `@` ou `www`)
+   - **Name** : (ex : `www`)
    - **Value** : IP publique de votre EC2
    - **TTL** : 300 (par défaut)
+
+ Ajoutez un enregistrement de type **A** :
+   - **Name** : 
+   - **Value** : IP publique de votre EC2
+   - **TTL** : 300 (par défaut)
+
 4. Attendez la propagation DNS (quelques minutes à quelques heures).
 
 ## 8. Accès à votre application
 
-- Accédez à `http://votre-domaine.com` ou `https://votre-domaine.com`.
-- Vous devriez voir votre application frontend servie par Nginx et sécurisée par SSL.
+- Accédez à `http://votre-domaine.com` 
+- Vous devriez voir votre site servi par Nginx et sécurisé par SSL.
 
 ---
 
@@ -130,11 +135,14 @@ sudo apt update
 sudo apt install nginx git -y
 sudo apt install certbot python3-certbot-nginx -y
 
-# Déploiement
+# Déploiement statique
 mkdir frontend && cd frontend
-git clone <URL_DU_REPO_FRONTEND>
-cd <nom_du_repo>
-npm install && npm run build
+git clone https://github.com/StartBootstrap/startbootstrap-agency.git
+
+# (Vérifiez le chemin avec pwd)
+
+# Configuration Nginx
+sudo vi /etc/nginx/sites-available/default
+sudo systemctl restart nginx
 ```
 
-N'hésitez pas à adapter ce guide selon vos besoins spécifiques !
