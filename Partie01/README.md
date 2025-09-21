@@ -68,29 +68,8 @@ sudo cp -r /home/ubuntu/frontend/startbootstrap-agency/dist/* /var/www/html/
 
 Les fichiers statiques (HTML, CSS, JS) sont maintenant servis directement par Nginx depuis `/var/www/html/`.
 
-<!-- ## 6. Configuration de Nginx pour servir l'app statique
 
-Modifiez la configuration Nginx :
 
-```bash
-sudo vi /etc/nginx/sites-available/default
-```
-
-Remplacez le bloc `server` par :
-
-```
-server {
-    listen 80;
-    server_name votre-domaine.com www.votre-domaine.com;
-
-    root /home/ubuntu/frontend/startbootstrap-agency/dist;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-} -->
-```
 
 - Le chemin `root` doit pointer vers le dossier contenant le fichier `index.html` de votre app Bootstrap.
 - Pour obtenir le chemin absolu, utilisez la commande `pwd` dans le dossier voulu.
